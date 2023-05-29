@@ -132,47 +132,126 @@ MIN-MAX, COUNT-AVG-SUM, GROUP BY, JOINS (INNER, OUTER, LEFT, RIGHT
 	
 	14) Tüm kitapların ortalama sayfa sayısını bulunuz.
 	#AVG
+		
+		select AVG(sayfasayisi) as OrtalamaSayfaSayisi
+		from kitap;
+		
 	
 	15) Sayfa sayısı ortalama sayfanın üzerindeki kitapları listeleyin.
 	
+		select * from kitap
+		where sayfasayisi > (select AVG(sayfasayisi) as OrtalamaSayfaSayisi
+		from kitap)
+		order by sayfasayisi
+	
+		
 	
 	16) Öğrenci tablosundaki öğrenci sayısını gösterin
+	
+		select count(*) OgrenciSayisi 
+		from ogrenci
 	
 	
 	17) Öğrenci tablosundaki toplam öğrenci sayısını toplam sayı takma(alias kullanımı) adı ile listeleyin.
 	
+		select count(*) "toplam sayı" 
+		from ogrenci
+	
 	
 	18) Öğrenci tablosunda kaç farklı isimde öğrenci olduğunu listeleyiniz.
 	
+		select count(distinct(ograd)) isimler
+		from ogrenci
+	
 	
 	19) En fazla sayfa sayısı olan kitabın sayfa sayısını listeleyiniz.
+		
+		select sayfasayisi 
+		from kitap
+		order by sayfasayisi desc 
+		limit 1
 	
 	
 	20) En fazla sayfası olan kitabın adını ve sayfa sayısını listeleyiniz.
 	
+		select kitapadi KitapAdi, sayfasayisi Sayfa
+		from kitap
+		order by sayfasayisi desc 
+		limit 1
 	
 	21) En az sayfa sayısı olan kitabın sayfa sayısını listeleyiniz.
+		
+		select sayfasayisi 
+		from kitap
+		order by sayfasayisi asc 
+		limit 1
 	
 	
 	22) En az sayfası olan kitabın adını ve sayfa sayısını listeleyiniz.
 	
+		select kitapadi KitapAdi, sayfasayisi Sayfa
+		from kitap
+		order by sayfasayisi asc 
+		limit 1
+	
 	
 	23) Dram türündeki en fazla sayfası olan kitabın sayfa sayısını bulunuz.
+		
+		select sayfasayisi 
+		from kitap, tur
+		where turadi = "Dram"
+		order by sayfasayisi desc 
+		limit 1
 	
 	
 	24) numarası 15 olan öğrencinin okuduğu toplam sayfa sayısını bulunuz.
 	
+		select SUM(sayfasayisi) "Okunan Sayfa Sayisi"
+		from kitap, islem
+		where ogrno = 15
+		
+	
 	
 	25) İsme göre öğrenci sayılarının adedini bulunuz.(Örn: ali 5 tane, ahmet 8 tane )
+			
+		select ograd OgrenciIsmi, count(ograd) IsimSayisi 
+		from ogrenci
+		group by ograd
+
 
 	
 	26) Her sınıftaki öğrenci sayısını bulunuz.
 	
+		select o.sinif Sinif, count(o.sinif) OgrenciSayisi
+		from ogrenci o
+		group by o.sinif
+		
 	
 	27) Her sınıftaki erkek ve kız öğrenci sayısını bulunuz.
+	
+		select o.sinif, count(o.ogrno) 
+		from ogrenci o
+		group by o.sinif, o.cinsiyet
 	
 	
 	28) Her öğrencinin adını, soyadını ve okuduğu toplam sayfa sayısını büyükten küçüğe doğru listeleyiniz.
 	
+		select o.ograd Adi,
+		o.ogrsoyad Soyadi,
+		SUM(k.sayfasayisi) ToplamSayfaSayisi
+		from ogrenci o
+		left join islem i on i.ogrno = o.ogrno
+		left join kitap k on k.kitapno = i.kitapno
+		group by o.ogrno
+		order by ToplamSayfaSayisi desc
 	
 	29) Her öğrencinin okuduğu kitap sayısını getiriniz.
+		
+		select o.ogrno "Öğrenci No", 
+		CONCAT(o.ograd, o.ogrsoyad) "Öğrenci" , 
+		count(i.kitapno) "Okunan Kitap Sayısı" 
+		from ogrenci o
+		left join islem i on i.ogrno = o.ogrno
+		group by o.ogrno
+	
+		
