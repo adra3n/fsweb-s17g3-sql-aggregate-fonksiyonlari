@@ -29,25 +29,53 @@ MIN-MAX, COUNT-AVG-SUM, GROUP BY, JOINS (INNER, OUTER, LEFT, RIGHT
 	#ilk 3 soruyu join kullanmadan yazın.
 	1) Öğrencinin adını, soyadını ve kitap aldığı tarihleri listeleyin.
 	
-
-	
+		select o.ograd Adi, o.ogrsoyad Soyadi, i.atarih AlımTarihi
+		from ogrenci o, islem i
+		where o.ogrno = i.ogrno
+		order by atarih;
+		
 	2) Fıkra ve hikaye türündeki kitapların adını ve türünü listeleyin.
 	
-	
+		select k.kitapadi KitapAdi, t.turadi Turu
+		from kitap k, tur t
+		where k.turno = t.turno
+		
 	3) 10B veya 10C sınıfındaki öğrencilerin numarasını, adını, soyadını ve okuduğu kitapları listeleyin.
+	
+	  	select o.ograd Adi, o.ogrsoyad Soyadi, k.kitapadi KitapAdi
+		from ogrenci o, islem i, kitap k
+		where o.ogrno = i.ogrno and (o.sinif = "10B" or o.sinif ="10C")
+		
 	
 	#join ile yazın
 	4) Öğrencinin adını, soyadını ve kitap aldığı tarihleri listeleyin.
-	
+		
+		select o.ograd Adi, o.ogrsoyad Soyadi, atarih AlımTarihi
+		from ogrenci o
+		join islem on ogrenci.ogrno = islem.ogrno
+		order by ogrenci.ogrno;
 	
 	5) Fıkra ve hikaye türündeki kitapların adını ve türünü listeleyin.
 	
+		select k.kitapadi KitapAdi, t.turadi Tur
+		from kitap k
+		join tur t on t.turno = k.turno
+		where t.turadi = "Fıkra" or t.turadi= "Hikaye"
+		
 	
 	6) 10B veya 10C sınıfındaki öğrencilerin numarasını, adını, soyadını ve okuduğu kitapları, öğrenci adına göre listeleyin.
 	
+		select o.ogrno No, o.ograd Adi, o.ogrsoyad Soyadi, k.kitapadi KitapAdi
+		from ogrenci o
+		join islem i on o.ogrno = i.ogrno
+		join kitap k on i.kitapno = i.kitapno
+		where o.ogrno = i.ogrno and (o.sinif = "10B" or o.sinif ="10C")
+        order by Adi
+	
 	
 	7) Kitap alan öğrencinin adı, soyadı, kitap aldığı tarih listelensin. Kitap almayan öğrencilerinde listede görünsün.
-	
+		
+		
 	
 	8) Kitap almayan öğrencileri listeleyin.
 	
