@@ -69,31 +69,66 @@ MIN-MAX, COUNT-AVG-SUM, GROUP BY, JOINS (INNER, OUTER, LEFT, RIGHT
 		from ogrenci o
 		join islem i on o.ogrno = i.ogrno
 		join kitap k on i.kitapno = i.kitapno
-		where o.ogrno = i.ogrno and (o.sinif = "10B" or o.sinif ="10C")
+		where o.sinif in ("10a", "10b")
         order by Adi
-	
 	
 	7) Kitap alan öğrencinin adı, soyadı, kitap aldığı tarih listelensin. Kitap almayan öğrencilerinde listede görünsün.
 		
-		
-	
+	 	select o.ograd Adi, o.ogrsoyad Soyadi, i.atarih AlımTarihi
+		from ogrenci o
+		left join islem i on o.ogrno = i.ogrno
+        order by o.ogrno
+			
 	8) Kitap almayan öğrencileri listeleyin.
 	
+		select o.ograd Adi, o.ogrsoyad Soyadi, i.atarih AlımTarihi
+		from ogrenci o
+		left join islem i on o.ogrno = i.ogrno
+		where o.ogrno not in (select ogrno from islem);
 	
 	9) Alınan kitapların kitap numarasını, adını ve kaç defa alındığını kitap numaralarına göre artan sırada listeleyiniz.
-	
-	
+		
+		select k.kitapno KitapNo, k.kitapadi Adi, count(i.kitapno) AlimSayisi
+		from kitap k
+		join islem i on k.kitapno = i.kitapno
+		group by k.kitapno
+		order by k.kitapno;
+		
 	10) Alınan kitapların kitap numarasını, adını kaç defa alındığını (alınmayan kitapların yanında 0 olsun) listeleyin.
+		
+		select k.kitapno KitapNo, k.kitapadi Adi, coalesce(count(i.kitapno), 0) AlimSayisi
+		from kitap k
+		left join islem i on k.kitapno = i.kitapno
+		group by k.kitapno
+		order by k.kitapno;
 
 
 	11) Öğrencilerin adı soyadı ve aldıkları kitabın adı listelensin.
 	
+		select o.ograd Adi, o.ogrsoyad Soyadi, k.kitapadi KitapAdi
+		from ogrenci o
+		join islem i on o.ogrno = i.ogrno
+		join kitap k on k.kitapno = i.kitapno
+		
 	
 	12) Her öğrencinin adı, soyadı, kitabın adı, yazarın adı soyad ve kitabın türünü ve kitabın alındığı tarihi listeleyiniz. Kitap almayan öğrenciler de listede görünsün.
 	
+		select o.ograd Adi, o.ogrsoyad Soyadi, k.kitapadi KitapAdi, y.yazarad YazarAdi, t.turadi Tur, i.atarih AlimTarihi
+		from ogrenci o
+		left join islem i on o.ogrno = i.ogrno
+		left join kitap k on k.kitapno = i.kitapno
+		left join tur t on t.turno = k.turno
+		left join yazar y on y.yazarno = k.yazarno
 	
 	13) 10A veya 10B sınıfındaki öğrencilerin adı soyadı ve okuduğu kitap sayısını getirin.
-	
+		
+		select o.ogrno no, o.ograd adi, o.ogrsoyad soyadi, coalesce(count(i.kitapno), 0) as okudugukitapsayisi
+		from ogrenci o
+		left join islem i on o.ogrno = i.ogrno
+		where o.sinif in ("10a", "10b")
+		group by o.ogrno
+		order by o.ogrno;
+		
 	
 	14) Tüm kitapların ortalama sayfa sayısını bulunuz.
 	#AVG
